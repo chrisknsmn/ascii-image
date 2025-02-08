@@ -1,0 +1,42 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f0f0;
+}
+.container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#result {
+  font-family: monospace;
+  white-space: pre;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 10px;
+  line-height: 1;
+}
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 20px 0;
+}
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hidden {
+  display: none;
+}
+#originalImage {
+  max-width: 300px;
+  margin-top: 20px;
+}

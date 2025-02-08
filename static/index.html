@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Interactive ASCII Art Generator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Interactive ASCII Art Generator</h1>
+
+      <form id="uploadForm">
+        <input type="file" name="image" accept="image/*" required />
+        <button type="submit">Upload Image</button>
+      </form>
+
+      <div class="controls hidden" id="controlsPanel">
+        <div class="control-group">
+          <label for="density">Character Density:</label>
+          <input type="range" id="density" min="0" max="100" value="50" />
+          <span id="densityValue">50</span>
+        </div>
+        <div class="control-group">
+          <label for="brightness">Brightness:</label>
+          <input type="range" id="brightness" min="0" max="100" value="50" />
+          <span id="brightnessValue">50</span>
+        </div>
+        <div class="control-group">
+          <label for="contrast">Contrast:</label>
+          <input type="range" id="contrast" min="0" max="100" value="50" />
+          <span id="contrastValue">50</span>
+        </div>
+        <div class="control-group">
+          <label for="width">Width:</label>
+          <input type="range" id="width" min="20" max="200" value="100" />
+          <span id="widthValue">100</span>
+        </div>
+      </div>
+
+      <div id="result" class="hidden"></div>
+      <img id="originalImage" class="hidden" />
+    </div>
+
+    <script>
+      let currentImage = null;
+      const controls = document.getElementById("controlsPanel");
+      const result = document.getElementById("result");
+      const originalImage = document.getElementById("originalImage");
+
+      document.querySelectorAll('input[type="range"]').forEach((slider) => {
+        slider.oninput = () => {
+          document.getElementById(slider.id + "Value").textContent =
+            slider.value;
+          if (currentImage) updateAscii();
+        };
+      });
+
+      async function updateAscii() {
+        const formData = new FormData();
+        formData.append("image", currentImage);
+
+        const params = new URLSearchParams({
+          density: document.getElementById("density").value,
+          brightness: document.getElementById("brightness").value,
+          contrast: document.getElementById("contrast").value,
+          width: document.getElementById("width").value,
+        });
+
+        try {
+          const response = await fetch(`/upload?${params.toString()}`, {
+            method: "POST",
+            body: formData,
+          });
+          const ascii = await response.text();
+          result.textContent = ascii;
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      document.getElementById("uploadForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const fileInput = e.target.querySelector('input[type="file"]');
+        currentImage = fileInput.files[0];
+
+        originalImage.src = URL.createObjectURL(currentImage);
+        originalImage.classList.remove("hidden");
+
+        controls.classList.remove("hidden");
+        result.classList.remove("hidden");
+
+        await updateAscii();
+      };
+    </script>
+  </body>
+</html>
