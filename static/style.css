@@ -21,6 +21,8 @@ body {
   overflow-x: auto;
   font-size: 10px;
   line-height: 1;
+
+  color: red;
 }
 .controls {
   display: grid;
